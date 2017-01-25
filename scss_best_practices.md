@@ -4,9 +4,8 @@ This document is intended to provide some guidance on how to styles
 
 ## General CSS Things to Know
 
-### What is an element
-
-### What is a selector?
+CSS is cascading style sheets because it styles your HTML in a cascading manner
+- meaning that rules can be applied with varying levels of specificity.
 
 ```scss
 .class-name {
@@ -16,6 +15,9 @@ This document is intended to provide some guidance on how to styles
 #elementId {
 	// Targets HTML element with 'id="elementId"'
 }
+```
+
+### Selector specificity
 
 ```scss
 .parent-element .child-element {
@@ -27,6 +29,18 @@ This document is intended to provide some guidance on how to styles
 }
 
 // The child element will be blue!
+
+.general-class {
+	color: green;	
+}
+
+// Elements with only 'general class' are green
+
+.general-class.specific-class {
+	color: yellow;
+}
+
+// Elements with both class are yellow
 ```
 
 
