@@ -2,6 +2,34 @@
 
 This document is intended to provide some guidance on how to styles
 
+## General CSS Things to Know
+
+### What is an element
+
+### What is a selector?
+
+```scss
+.class-name {
+	// Targets any HTML element with 'class="class-name"'
+}
+
+#elementId {
+	// Targets HTML element with 'id="elementId"'
+}
+
+```scss
+.parent-element .child-element {
+	color: red;
+}
+
+.child-element {
+	color: blue;
+}
+
+// The child element will be blue!
+```
+
+
 ## SCSS Intro
 
 Why SCSS?
@@ -15,7 +43,7 @@ Why SCSS?
 Anytime you see an `&` in the selector, it's the same as writing the parent
 selector:
 
-```
+```scss
 // SCSS
 a {
 	&:hover {
