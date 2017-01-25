@@ -99,7 +99,7 @@ ratio on an element (particularly useful for images).
 If you have an element without top-padding specified and the first element has
 margin-top set, that margin will appear as if it were on the enclosing element.
 To prevent this, you should either (1) specific a top padding (even 0 will do)
-or (2) 
+or (2). This behavior is known as [margin collapsing](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Box_Model/Mastering_margin_collapsing).
 
 ## 
 
