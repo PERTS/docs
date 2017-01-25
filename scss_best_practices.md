@@ -1,6 +1,34 @@
 # HTML Styling (SCSS) Best Practices
 
-This document is inteneded to give 
+This document is intended to provide some guidance on how to styles
+
+## SCSS Intro
+
+Why SCSS?
+
+### Techniques
+
+#### Variables
+
+#### Nesting
+
+Anytime you see an `&` in the selector, it's the same as writing the parent
+selector:
+
+```
+// SCSS
+a {
+	&:hover {
+		color: inherit;
+	}
+}
+// CSS
+a:hover {
+	color: inherit;
+}
+```
+
+#### @mixins
 
 ## Box-sizing
 
@@ -66,6 +94,18 @@ To be safe, it might help to use the rule `backface-vibility: none;`
 
 ### Z-Indexing
 
+Avoid z-indexing whenever possible, it's so much better just to layer elements
+in html in the proper way. Z-indexing seems to lead to a lot of cross-browser
+issues!
+
+### Scrolling
+
+Ever wonder how some apps seem to scroll more smoothly on iPhone and iPad?
+```
+-webkit-overflow-scrolling: touch;
+```
+Boom.
+
 ## Animations
 
 ### Transitions
@@ -80,7 +120,8 @@ cursor leaves a button (for example).
 
 ### @animations
 
-For 
+For more complicated animations, using the `animation` property with
+`keyframes` is recommended. 
 
 ## Linting
 
