@@ -120,6 +120,38 @@ For maximum explicitness, you should install [jshint][1] in your code editor and
 [1]: http://jshint.com/docs/ "JSHint docs"
 [2]: https://gist.github.com/cmacrander/b4122329b4699f2a6bd6 "need to move this jshint config into the repo"
 
+### Variable declarations
+
+Use `var` for variables that belong to a whole function scope. Use `let` for variables meant to live in a block scope within a function.
+
+    function foo(x) {
+      var y = 5;
+      if (y > 0) {
+        let z = true;
+        /* do stuff */
+      }
+      for (let i = 0; i < x; i += 1) {
+        /* do stuff */
+      }
+    }
+
+Since `const` doesn't make values immutable, which is confusing, reserve `const` for types that are already immutable.
+
+    const x = 5;
+    const API_KEY = 'abcdef';
+
+### Arrow Functions
+
+Always use parentheses around argument sets, even though it's sometimes optional.
+
+    () => 5
+    (x) => 2 * x
+    (x, y) => x + y
+
+Use them sparingly, reserving them for cases where functions are already extremely concise, or when it's inconvenient for the function to have its own `this` (b/c arrow functions don't have them).
+
+Reasons to avoid them include: operator precedence complications, complex rules about implicit return, inability to give a name to the function which makes debugging difficult.
+
 
 ## Python
 
