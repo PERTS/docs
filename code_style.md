@@ -122,23 +122,22 @@ For maximum explicitness, you should install [jshint][1] in your code editor and
 
 ### Variable declarations
 
-Use `var` for variables that belong to a whole function scope. Use `let` for variables meant to live in a block scope within a function.
+Default to `const` for variables which won't be reassigned. Note that `const` doesn't mean the value can't change, just that you can't put it on the left hand side of an assignment.
+
+Otherwise use `var` for variables that belong to a whole function scope and `let` for variables meant to live in a block scope .
 
     function foo(x) {
-      var y = 5;
+      const y = 5;  // never reassigned
+      var counter = 0;  // gets reassigned
       if (y > 0) {
-        let z = true;
+        let z = true;  // only lives in the block
         /* do stuff */
       }
       for (let i = 0; i < x; i += 1) {
+        counter += 1;
         /* do stuff */
       }
     }
-
-Since `const` doesn't make values immutable, which is confusing, reserve `const` for types that are already immutable.
-
-    const x = 5;
-    const API_KEY = 'abcdef';
 
 ### Arrow Functions
 
