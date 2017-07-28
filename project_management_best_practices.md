@@ -1,10 +1,8 @@
 # Project Management Best Practices
 
-
-
 ## Epic
 
-A feature set, or a big user story.
+A feature set, or a big user story, e.g. "New users can register and authenticate."
 
 In ZenHub, these are issues with a special label.
 
@@ -14,7 +12,7 @@ A user-centered (not developer-centered) story of something they can accomplish 
 
 In ZenHub, these are issues with the `user story` label. They're moved through various pipelines on the Board and assigned points at the appropriate time.
 
-The granularity of a user story is agnostic of implementation details. This relates to how to [estimate points](#Points). It also means that implementation details (i.e. [tasks](#Tasks)) should be recorded in sub-tasks via markdown checklists, possibly broken out into their own issues.
+The granularity of a user story is agnostic of implementation details. This relates to how to [estimate points](#points). It also means that implementation details (i.e. [tasks](#tasks)) should be recorded in sub-tasks via markdown checklists, possibly broken out into their own issues.
 
 ## Tasks
 
@@ -49,7 +47,7 @@ Picked up these opinions from [this thread](https://softwareengineering.stackexc
 
 In ZenHub, these are Milestones.
 
-Weekly? Two weeks?
+We'll try week-long sprints.
 
 The goal of a **scrum** is to slot issues from the backlog into the current sprint.
 
