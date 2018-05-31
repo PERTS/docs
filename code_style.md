@@ -61,21 +61,42 @@ Put line breaks after commas or open brackets, using one of two methods.
 
 ### Case
 
-The default case is snake case i.e. underscore case. This holds for R, Python, and file and folder names in all languages.
+Unless otherwise specified, the default case for all files and code is snake case i.e. underscore case. This holds for R, Python, and most file and folder names.
 
+    # Files
     like_this.html
+    py_module.py
 
-JavaScript uses camel case, except where it deals with server-defined variable names, which are in snake case.
+    # Python
+    import py_module
+    def accomplish_task():
 
-    var likeThis = 5;
+    # R
+    cleaned_df <- qc.clean_qualtrics(df)  # R
 
-CSS and HTML use dash case, which includes tags, element ids, class names, and attributes.
+JavaScript uses camel case, including in file names.
+
+    coolModule.js
+    componentTemplate.html
+
+    import coolModule from './coolModule';
+
+    const likeThis = 5;
+
+CSS and HTML use dash case, which includes tags, element ids, class names, and attributes. User-facing URLs, like front end application routes and short links, are also in dash case.
 
     .like-this {
       font-weight: bold;
     }
 
     <my-tag id="the-tag" class="like-this" ng-model="this"></my-tag>
+
+    perts.net/google-sees-this-url
+    pertsapp.org/users/5/account-settings
+
+One exception to the dash case rule is JSX in React, which has strong community conventions to treat everything ike JavaScript variables, so they are in camel case:
+
+    <CoolComponent className="CleverStyles" />
 
 ### Comments
 
