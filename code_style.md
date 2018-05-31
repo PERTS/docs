@@ -61,21 +61,42 @@ Put line breaks after commas or open brackets, using one of two methods.
 
 ### Case
 
-The default case is snake case i.e. underscore case. This holds for R, Python, and file and folder names in all languages.
+Unless otherwise specified, the default case for all files and code is snake case i.e. underscore case. This holds for R, Python, and most file and folder names.
 
+    # Files
     like_this.html
+    py_module.py
 
-JavaScript uses camel case, except where it deals with server-defined variable names, which are in snake case.
+    # Python
+    import py_module
+    def accomplish_task():
 
-    var likeThis = 5;
+    # R
+    cleaned_df <- qc.clean_qualtrics(df)  # R
 
-CSS and HTML use dash case, which includes tags, element ids, class names, and attributes.
+JavaScript uses camel case, including in file names.
+
+    coolModule.js
+    componentTemplate.html
+
+    import coolModule from './coolModule';
+
+    const likeThis = 5;
+
+CSS and HTML use dash case, which includes tags, element ids, class names, and attributes. User-facing URLs, like front end application routes and short links, are also in dash case.
 
     .like-this {
       font-weight: bold;
     }
 
     <my-tag id="the-tag" class="like-this" ng-model="this"></my-tag>
+
+    perts.net/google-sees-this-url
+    pertsapp.org/users/5/account-settings
+
+One exception to the dash case rule is JSX in React, which has strong community conventions to treat everything ike JavaScript variables, so they are in camel case:
+
+    <CoolComponent className="CleverStyles" />
 
 ### Comments
 
@@ -115,20 +136,20 @@ Limited to very short comments. Put two spaces between the end of the code and t
 
 ## Javascript
 
-For maximum explicitness, you should install [jshint][1] in your code editor and give it [these][2] settings. If for some reason you can't, you can run your code through [jslint.com](jslint.com).
+For maximum explicitness, you should install [ESLint][1] in your code editor and use the `.eslintrc` file in this repo.
 
-[1]: http://jshint.com/docs/ "JSHint docs"
+[1]: https://eslint.org "ESLint"
 [2]: https://gist.github.com/cmacrander/b4122329b4699f2a6bd6 "need to move this jshint config into the repo"
 
 ### Variable declarations
 
 Default to `const` for variables which won't be reassigned. Note that `const` doesn't mean the value can't change, just that you can't put it on the left hand side of an assignment.
 
-Otherwise use `var` for variables that belong to a whole function scope and `let` for variables meant to live in a block scope .
+Otherwise use `let`.
 
     function foo(x) {
       const y = 5;  // never reassigned
-      var counter = 0;  // gets reassigned
+      let counter = 0;  // gets reassigned
       if (y > 0) {
         let z = true;  // only lives in the block
         /* do stuff */
@@ -139,18 +160,9 @@ Otherwise use `var` for variables that belong to a whole function scope and `let
       }
     }
 
-### Arrow Functions
+### Function style
 
-Always use parentheses around argument sets, even though it's sometimes optional.
-
-    () => 5
-    (x) => 2 * x
-    (x, y) => x + y
-
-Use them sparingly, reserving them for cases where functions are already extremely concise, or when it's inconvenient for the function to have its own `this` (b/c arrow functions don't have them).
-
-Reasons to avoid them include: operator precedence complications, complex rules about implicit return, inability to give a name to the function which makes debugging difficult.
-
+Prefer arrow functions for callbacks and other places where it's natural to use anonymous functions. Otherwise use function declarations. Avoid function expressions.
 
 ## Python
 
