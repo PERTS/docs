@@ -136,20 +136,20 @@ Limited to very short comments. Put two spaces between the end of the code and t
 
 ## Javascript
 
-For maximum explicitness, you should install [jshint][1] in your code editor and give it [these][2] settings. If for some reason you can't, you can run your code through [jslint.com](jslint.com).
+For maximum explicitness, you should install [ESLint][1] in your code editor and use the `.eslintrc` file in this repo.
 
-[1]: http://jshint.com/docs/ "JSHint docs"
+[1]: https://eslint.org "ESLint"
 [2]: https://gist.github.com/cmacrander/b4122329b4699f2a6bd6 "need to move this jshint config into the repo"
 
 ### Variable declarations
 
 Default to `const` for variables which won't be reassigned. Note that `const` doesn't mean the value can't change, just that you can't put it on the left hand side of an assignment.
 
-Otherwise use `var` for variables that belong to a whole function scope and `let` for variables meant to live in a block scope .
+Otherwise use `let`.
 
     function foo(x) {
       const y = 5;  // never reassigned
-      var counter = 0;  // gets reassigned
+      let counter = 0;  // gets reassigned
       if (y > 0) {
         let z = true;  // only lives in the block
         /* do stuff */
@@ -160,18 +160,9 @@ Otherwise use `var` for variables that belong to a whole function scope and `let
       }
     }
 
-### Arrow Functions
+### Function style
 
-Always use parentheses around argument sets, even though it's sometimes optional.
-
-    () => 5
-    (x) => 2 * x
-    (x, y) => x + y
-
-Use them sparingly, reserving them for cases where functions are already extremely concise, or when it's inconvenient for the function to have its own `this` (b/c arrow functions don't have them).
-
-Reasons to avoid them include: operator precedence complications, complex rules about implicit return, inability to give a name to the function which makes debugging difficult.
-
+Prefer arrow functions for callbacks and other places where it's natural to use anonymous functions. Otherwise use function declarations. Avoid function expressions.
 
 ## Python
 
