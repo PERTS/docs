@@ -57,11 +57,10 @@ echo "--------------------------"
 echo "Cloning PERTS repositories"
 echo "--------------------------"
 mkdir -p ~/Sites
-cd ~/Sites
 # Choosing these repos because they're the ones non-devs (who benefit most from
 # automation) are most likely to contribute to.
-git clone https://github.com/PERTS/yellowstone.git
-git clone https://github.com/PERTS/mindsetkit.git
+git clone https://github.com/PERTS/yellowstone.git ~/Sites/yellowstone
+git clone https://github.com/PERTS/mindsetkit.git ~/Sites/mindsetkit
 
 echo "------------------------------------"
 echo "PERTS Workstation Installer Complete"
