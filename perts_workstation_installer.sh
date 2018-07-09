@@ -49,6 +49,8 @@ brew cask install google-backup-and-sync
 brew cask install google-chrome
 brew cask install google-cloud-sdk
 brew cash install postman
+brew cask install r-app
+brew cask install rstudio
 brew cask install slack
 brew cask install sublime-text
 brew cask install veracrypt
