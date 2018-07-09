@@ -164,6 +164,14 @@ Otherwise use `let`.
 
 Prefer arrow functions for callbacks and other places where it's natural to use anonymous functions. Otherwise use function declarations. Avoid function expressions.
 
+### Polyfills, utilities, and the native environment
+
+If you need a utility function, check first if it's part of any ECMA spec, and use that. If it doesn't have support back to IE 10, then use a [`core-js`](https://www.npmjs.com/package/core-js) import that acts as a polyfill.
+
+If there's no such function, look for something in [lodash](https://lodash.com/).
+
+If neither of those work, and you have good reason, extend the appropriate prototype (e.g. `Array.prototype.first`) which should go in an "extensions" folder/file, or a custom utility module, e.g. `nepUtil`.
+
 ## Python
 
 Follow [PEP 8][3], ideally by installing a style checker, like SublimeLinter.
