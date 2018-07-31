@@ -19,13 +19,13 @@
 So, try to use `modules` which give us explicit imports, and forces package namespacing.
 
 * Importing a script with `use()` like so: `sql <- modules::use('sql.R')` 1) makes it explicit where all sql functions came from, and 2) makes it easier to avoid/debug namespace collisions i.e. there no hidden side-effects on your environment.
-* Code inside scripts which are imported via `modules::use` must explicitly declare the packages they're using, either with double colon syntax on each package function call, or with `modules::import("my_package")`. In both cases it can't affect the environments of calling scripts. Using the `::` is preferred for new code. Using `import()` can make adapting old code for use in modules easier.
+* Code inside scripts which are imported via `modules::use` must explicitly declare the packages they're using; calling `library()` will raise an error. Cod must either use double colon syntax for each package function, e.g. `dplyr::summarise()`, or use modules' equivalent of `library()`, which looks like `modules::import('dplyr')`. In both cases it can't affect the environments of calling scripts. Using the `::` is preferred for new code. Using `import()` can make adapting old code for use in modules easier.
 
 ## Akward exceptions
 
 ### What if the package isn't installed?
 
-This is why we're starting to use `ensure_packages()`.
+This is why we're starting to use `ensure_packages()`. This will skip installation for a package you already have, will choose a US-based mirror for you, and will avoid compiling from source, which takes a long time.
 
 ### What if the location of the file to import is hard to determine, i.e. you don't know your working directory?
 
