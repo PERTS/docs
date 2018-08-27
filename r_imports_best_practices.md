@@ -19,7 +19,7 @@
 So, try to use `modules` which give us explicit imports, and forces package namespacing.
 
 * Importing a script with `use()` like so: `sql <- modules::use('sql.R')` 1) makes it explicit where all sql functions came from, and 2) makes it easier to avoid/debug namespace collisions i.e. there no hidden side-effects on your environment.
-* Code inside scripts which are imported via `modules::use` must explicitly declare the packages they're using; calling `library()` will raise an error. Cod must either use double colon syntax for each package function, e.g. `dplyr::summarise()`, or use modules' equivalent of `library()`, which looks like `modules::import('dplyr')`. In both cases it can't affect the environments of calling scripts. Using the `::` is preferred for new code. Using `import()` can make adapting old code for use in modules easier.
+* Code inside scripts which are imported via `modules::use` must explicitly declare the packages they're using; calling `library()` will raise an error. Code must either use double colon syntax for each package function, e.g. `dplyr::summarise()`, or use modules' equivalent of `library()`, which looks like `modules::import('dplyr')`. In both cases it can't affect the environments of calling scripts. Using the `::` is preferred for new code. Using `import()` can make adapting old code for use in modules easier.
 
 ## Akward exceptions
 
@@ -64,3 +64,19 @@ Equivalent of `library()` for code inside modules; assigns all package functions
 `modules::import('dplyr', 'summarise')`
 
 Assigns only the requested package function to the environment. Useful if you know you only want a small part of a large package. Also it's nicely explicit about what variable is being defined.
+
+## Non-pure operations
+
+Pure functions have no side-effects, they only return a value, which depends entirely on the inputs. Pure functions are great because they're easy to understand, debug, re-use, and deploy in various contexts (like App Engine). Most of the code we write should be in the form of pure functions. Of course side-effects like writing to disk are inevitable if you want to get anything done, but they can be collected at the "edges" of your code, e.g. only at the beginning at the end of a given script, or wrapped within their own functions. In either case, the pure and non-pure code can easily be separated.
+
+The following operations make code non-pure and should be avoided in the bulk of code:
+
+* Writing or reading from the file system
+* Unix commands e.g. with `system()`
+* Setting global `options()`
+* Network traffic:
+  - Calling `source()` on a URL
+  - using packages like `httr` or `RCurl`
+  - reading from google sheets
+  - connecting to databases
+* Importing code from another file from within a function
