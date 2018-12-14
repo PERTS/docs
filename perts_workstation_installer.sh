@@ -48,7 +48,9 @@ brew cask install github
 brew cask install google-backup-and-sync
 brew cask install google-chrome
 brew cask install google-cloud-sdk
-brew cash install postman
+# Java needed for Google Datastore Emulator (running gae apps locally).
+brew cask install java
+brew cask install postman
 brew cask install r-app
 brew cask install rstudio
 brew cask install slack
@@ -70,6 +72,9 @@ echo "4. Choose Y ('yes') for any other prompts."
 echo ""
 read -p "Press return to continue."
 echo ""
+# This modifies the user's PATH so dev_appserver.py is available.
+/usr/local/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/install.sh
+source ~/.bash_profile
 gcloud init
 gcloud components install app-engine-python
 gcloud components install app-engine-python-extras
