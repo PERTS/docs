@@ -1,3 +1,25 @@
+# Cypress Testing Best Practices
+
+## Tests succeed in isolation but fail in a suite
+
+Cypress seems to do a bad job truly isolating test environments. Informal evidence suggests that, when running several tests, the following things can originate in test A but then affect test B:
+
+- thrown errors
+- localstorage data
+- xhr requests
+
+So, first of all, when a test succeeds isolation but fails in a suite, _it might not be that test that's failing_, it might be another, likely the one just before it.
+
+Secondly, the async response a test needs may not arrive before the runner switches to the next test. One way to avoid that is to add code to suite which forces Cypress to unload the page between tests:
+
+```
+afterEach(() => {
+  cy.window().then(win => {
+    win.location.href = 'about:blank';
+  });
+});
+```
+
 # Jest and Enzyme Testing Best Practices
 
 ## Use Wrapper API
