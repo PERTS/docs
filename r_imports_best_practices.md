@@ -1,6 +1,6 @@
-# Conventions for importing scripts and packages in R
+## Import scripts as modules and prefer package prefixes to `library()`
 
-## Rationale
+### Rationale
 
 `source()` is annoying because
 
@@ -14,28 +14,28 @@
 * It's hard to trace where a given variable in your script is defined because functions defined in packages have no obvious naming pattern that shows what package they came from, you have to just be familiar with the contents of each package being called with `library()`.
 * Namespace collisions, as above.
 
-## Best practice
+### Best practice
 
 So, try to use `modules` which give us explicit imports, and forces package namespacing.
 
-* Importing a script with `use()` like so: `sql <- modules::use('sql.R')` 1) makes it explicit where all sql functions came from, and 2) makes it easier to avoid/debug namespace collisions i.e. there no hidden side-effects on your environment.
-* Code inside scripts which are imported via `modules::use` must explicitly declare the packages they're using; calling `library()` will raise an error. Code must either use double colon syntax for each package function, e.g. `dplyr::summarise()`, or use modules' equivalent of `library()`, which looks like `modules::import('dplyr')`. In both cases it can't affect the environments of calling scripts. Using the `::` is preferred for new code. Using `import()` can make adapting old code for use in modules easier.
+* Importing a script with `use()` like so: `sql <- modules::use('sql.R')` does tow things
+    - makes it explicit where all sql functions came from, and
+    - makes it easier to avoid/debug namespace collisions i.e. there no hidden side-effects on your environment.
+* Code inside scripts which are imported via `modules::use` must explicitly declare the packages they're using; calling `library()` will raise an error. Code must either use double colon syntax for each package function, e.g. `dplyr::summarise()`, or use modules' equivalent of `library()`, which looks like `modules::import('dplyr')`. In both cases it can't affect the environments of calling scripts. Using the `::` is preferred for new code. Using `modules::import()` can make adapting old code for use in modules easier.
 
-## Akward exceptions
+### Akward exceptions
 
-### What if the package isn't installed?
+**What if the package isn't installed?**
 
-This is why we're starting to use `ensure_packages()`. This will skip installation for a package you already have, will choose a US-based mirror for you, and will avoid compiling from source, which takes a long time.
+This is why we're starting to use `packages$ensure()`. This will skip installation for a package you already have, will choose a US-based mirror for you, and will avoid compiling from source, which takes a long time.
 
-### What if the location of the file to import is hard to determine, i.e. you don't know your working directory?
+**What if the location of the file to import is hard to determine, i.e. you don't know your working directory?**
 
-This is why packages exist, because they can be looked up / installed from any CRAN mirror. If a function is in a package, you always know where to get it.
+This is why packages exist, because they can be looked up / installed from any CRAN mirror. If a function is in a package, you always know where to get it. We may build packages in the future, but compiling and publishing them is a hassle, and it's much easier to just use `*.R` files as modules.
 
-For little script files, this is harder, but is a great use case for loading gymnast code from github; we always know where that is.
+In general this problem can be avoided by always keeping your working directory at the root of the relevant repository. Then all files that need to be imported can be placed in a subdirectory like `common` and imported with `modules::use('common/something.R')`.
 
-And _that_ is a good reason not to run `gymnast_install()` directly within `util.R` because it forces anyone using any gymnast code to install all those packages.
-
-## How do these all work, exactly?
+### How do these all work, exactly?
 
 `source('helpers.R')`
 
@@ -65,18 +65,91 @@ Equivalent of `library()` for code inside modules; assigns all package functions
 
 Assigns only the requested package function to the environment. Useful if you know you only want a small part of a large package. Also it's nicely explicit about what variable is being defined.
 
-## Non-pure operations
+## Prefer pure operations
 
 Pure functions have no side-effects, they only return a value, which depends entirely on the inputs. Pure functions are great because they're easy to understand, debug, re-use, and deploy in various contexts (like App Engine). Most of the code we write should be in the form of pure functions. Of course side-effects like writing to disk are inevitable if you want to get anything done, but they can be collected at the "edges" of your code, e.g. only at the beginning at the end of a given script, or wrapped within their own functions. In either case, the pure and non-pure code can easily be separated.
 
-The following operations make code non-pure and should be avoided in the bulk of code:
+The following operations make code non-pure and should be **avoided** in the bulk of code:
 
+* Setting global `options()`
 * Writing or reading from the file system
 * Unix commands e.g. with `system()`
-* Setting global `options()`
 * Network traffic:
   - Calling `source()` on a URL
   - using packages like `httr` or `RCurl`
   - reading from google sheets
   - connecting to databases
-* Importing code from another file from within a function
+* Importing code from another file from within a function. Instead, importing other code should happen in the global environment of the primary script.
+
+## Fail gracefully for zero-length structures
+
+Avoid looping over ranges that always start with 1, because they fail when the number of iterations is zero:
+
+```
+# Fails when length(x) is zero:
+for (i in 1:length(x)) { ... }
+```
+
+Prefer looping over the values of the structure itself, or use `sequence` because `sequence(0)` is `integer(0)` and results in the loop simply not executing.
+
+```
+# Loop over values:
+for (y in x) { ... }
+
+# Or allow for zero length in indexes:
+for (i in sequence(length(x))) { ... }
+```
+
+## Prefer immutable data
+
+Avoid overwriting objects in the environment, which often happens when "building up" data.
+
+```
+# Bad practice:
+x <- data.frame(...)
+x <- dplyr::filter(x, ...)
+x <- merge(x, ...)
+```
+
+This makes scripts difficult to debug because the value of `x` varies depending on exactly where in the script you are accessing code. If you run the code to the end, but then need to investigate what the value of `x` was halfway through, there's no obvious strategy other than to start over.
+
+Prefer giving objects distinct, descriptive names and make new ones rather that overwriting old ones.
+
+```
+# Good practice:
+default_responses <- data.frame(...)
+last_week_responses <- dplyr::filter(default_responses, ...)
+response_class_assoc <- merge(last_week_responses, ...)
+```
+
+Note that piping can replace existing "built up" code without overwriting objects because only the final object is written to the environment:
+
+```
+# Build up data with pipes:
+y <- x %>%
+  addSomeData() %>%
+  addMoreData()
+```
+
+One downside to using distinct names for every object is that environments can start to use a lot of memory (R copies objects with every assignment). However this is only a problem if many lines of complex code are written in the same envionment, which is also to be avoided, see [Prefer functions](#prefer-functions).
+
+## Prefer functions
+
+Most code should be inside functions and called from elsewhere. This keeps any given environment small, which keeps computer memory needs small and programmer working memory needs small. It also promotes reusability.
+
+**Even when there's little chance a given chunk of code will be reused** exactly as-is, it's much easier to analyze, maintain, and read code that is broken up into functions. Critically, functions are explicit about what information they depend on via their arguments, so it is _much_ easier to understand when a function needs to change or can be safely left alone, or when it can be removed.
+
+At the risk of overemphasis, code should _not_ be written in huge, flat scripts where (for instance) code on line 1800 can reference variables modified on lines 295 and 1342, because maintaining and modifying it is enormously time consuming. Code reviewers should insist that changes which extend the length of a script significantly be broken up into functions.
+
+```
+# Good practice:
+data <- importSomeData()
+descriptive_name1 <- complicatedOperationOne(data)
+descriptive_name2 <- complicatedOperationTwo(data)
+result <- complicatedOperationThree(
+    descriptive_name1,
+    descriptive_name2
+)
+writeResultSomewhereUseful(result)
+# End of script! So short!
+```
