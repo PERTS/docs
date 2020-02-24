@@ -34,30 +34,17 @@ When reading code on github.com, or if your text editor doesn't always wrap line
 
 ### Indentation after line breaks
 
-Put line breaks after commas or open brackets, using one of two methods.
-
-**Indentation Method #1: after open brackets**
+Put line breaks after commas or open brackets.
 
     function () {
-        my_variable  # one four-space indent after line break
+        my_variable  # one indent after line break
     }  # close bracket goes on new line
-
-    result = long_function_call(
-        long_argument_one, long_argument_two, long_argument_three,
-        long_argument_four
-    )
 
     list_of_stuff = [
         'thing1',
         'thing2',
         'thing3'
     ]
-
-**Indentation Method #2: within brackets**
-
-    result = do_stuff(long_argument_one, long_argument_two,
-                      long_argument_three)  # indent to the open bracket
-    # closing bracket does not go on a new line
 
 ### Case
 
@@ -100,7 +87,7 @@ One exception to the dash case rule is JSX in React, which has strong community 
 
 ### Comments
 
-Use single-line comment syntax ( // or # ) rather than multi-line comment syntax ( /* … */ ) whenever possible. More commenting is better. Comments should be used to
+Use single-line comment syntax ( // or # ) rather than multi-line comment syntax ( /* … */ ) whenever possible. Comments should be used to
 
 * Explain the high-level intent of the code
 * Note any tricky gotchas or things to be careful of
@@ -136,7 +123,7 @@ Limited to very short comments. Put two spaces between the end of the code and t
 
 ## Javascript
 
-For maximum explicitness, you should install [ESLint][1] in your code editor and use the `.eslintrc` file in this repo.
+For maximum explicitness, you should install [ESLint][1] in your code editor and use the `.eslintrc` file in this repo, as well as [Prettier](https://prettier.io/).
 
 [1]: https://eslint.org "ESLint"
 [2]: https://gist.github.com/cmacrander/b4122329b4699f2a6bd6 "need to move this jshint config into the repo"
@@ -162,7 +149,7 @@ Otherwise use `let`.
 
 ### Function style
 
-Prefer arrow functions for callbacks and other places where it's natural to use anonymous functions. Otherwise use function declarations. Avoid function expressions.
+Prefer arrow functions unless the code requires use of `this`.
 
 ### Polyfills, utilities, and the native environment
 
@@ -203,8 +190,10 @@ This is hard in R, considering how verbose paste() is. If you source util.R, you
 
     "Simple is as " %+% simple_str %+% " does."
 
-    stop("Here's a long message that shouldn't go too long, " %+%
-         "so I use the infix operator!")
+    stop(
+      "Here's a long message that shouldn't go too long, " %+%
+      "so I use the infix operator!"
+    )
 
 ### Piping
 
@@ -253,7 +242,7 @@ Where does the function go?
 
 * Gymnast
   - Totally agnostic
-* perts_analyses/common
+* analysis/common
   - Specific to PERTS architecture
   - Agnostic to specific analyses
 * project-specific helper file
