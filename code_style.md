@@ -5,6 +5,11 @@ To make our code mutually more readable, let's follow some style conventions. Le
 
 ## All Languages
 
+Use automatic stylers, if available, and stop reading this document.
+
+* JavaScript: use Prettier
+* R: use `styler`, but it's not quite as good as Prettier, so do read the R section.
+
 ### Indent blocks
 
 In general this means increase your indent by one level after every open curly bracket, i.e. function bodies, for loops, if blocks, etc.
@@ -141,36 +146,15 @@ For maximum explicitness, you should install [ESLint][1] in your code editor and
 [1]: https://eslint.org "ESLint"
 [2]: https://gist.github.com/cmacrander/b4122329b4699f2a6bd6 "need to move this jshint config into the repo"
 
-### Variable declarations
-
-Default to `const` for variables which won't be reassigned. Note that `const` doesn't mean the value can't change, just that you can't put it on the left hand side of an assignment.
-
-Otherwise use `let`.
-
-    function foo(x) {
-      const y = 5;  // never reassigned
-      let counter = 0;  // gets reassigned
-      if (y > 0) {
-        let z = true;  // only lives in the block
-        /* do stuff */
-      }
-      for (let i = 0; i < x; i += 1) {
-        counter += 1;
-        /* do stuff */
-      }
-    }
-
-### Function style
-
-Prefer arrow functions for callbacks and other places where it's natural to use anonymous functions. Otherwise use function declarations. Avoid function expressions.
+Configure your eslint to use a Prettier plugin, and stop worrying about style.
 
 ### Polyfills, utilities, and the native environment
 
-If you need a utility function, check first if it's part of any ECMA spec, and use that. If it doesn't have support back to IE 10, then use a [`core-js`](https://www.npmjs.com/package/core-js) import that acts as a polyfill.
+If you need a utility function, check first if it's part of any ECMA spec, and use that. PERTS no longer supports IE, so as long at the feature is supported in Edge, Chrome, Firefox, and Safari, both desktop and mobile, you're good. Otherwise use a [`core-js`](https://www.npmjs.com/package/core-js) import that acts as a polyfill.
 
 If there's no such function, look for something in [lodash](https://lodash.com/).
 
-If neither of those work, and you have good reason, extend the appropriate prototype (e.g. `Array.prototype.first`) which should go in an "extensions" folder/file, or a custom utility module, e.g. `nepUtil`.
+Otherwise just write your own function. Don't extend native prototypes.
 
 ## Python
 
@@ -196,6 +180,21 @@ Functions should be documented within the body of the function, and otherwise fo
 
 [5]: http://adv-r.had.co.nz/Style.html "Wickham's Style Guide For R"
 [6]:http://r-pkgs.had.co.nz/man.html#man-functions "ROxygen Documentation Format"
+
+### Use Explicit Returns
+
+This is an exception to Wickham's style guide: always use a `return(foo)` statement at the end of a function, unless it's a one-liner. We find it less difficult to predict what the function will return this way.
+
+```
+# One-liner, no return().
+doubleit <- function (x) x * 2
+
+# Otherwise, explicitly return.
+fibonacci <- function (n) {
+  # ...
+  return(nth_fibonacci_number)
+}
+```
 
 ### String concatenation and wrapping
 
