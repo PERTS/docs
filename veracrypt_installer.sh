@@ -23,7 +23,7 @@ echo "--------------------"
 echo "Installing VeraCrypt"
 echo "--------------------"
 echo ""
-brew cask install veracrypt
+brew install --cask veracrypt
 brew cask cleanup
 echo "------------------"
 echo "Installer Complete"
