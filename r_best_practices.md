@@ -1,4 +1,4 @@
-## Import scripts as modules and prefer package prefixes to `library()`
+## Import scripts as modules and prefer importing packages over to `library()`
 
 ### Rationale
 
@@ -11,7 +11,7 @@
 `library()` is annoying because
 
 * It obscures the fact that all installed packages are already available (you don't need to call `library()` to use them! Restart R and run `dplyr::summarise`; if it's installed, you'll see it).
-* It's hard to trace where a given variable in your script is defined because functions defined in packages have no obvious naming pattern that shows what package they came from, you have to just be familiar with the contents of each package being called with `library()`.
+* It's hard to trace or discover where a given variable in your script is defined because functions defined in packages have no obvious naming pattern that shows what package they came from, you have to just be familiar with the contents of each package being called with `library()`.
 * Namespace collisions, as above.
 
 ### Best practice
@@ -21,19 +21,26 @@ So, try to use `modules` which give us explicit imports, and forces package name
 * Importing a script with `use()` like so: `sql <- modules::use('sql.R')` does tow things
     - makes it explicit where all sql functions came from, and
     - makes it easier to avoid/debug namespace collisions i.e. there no hidden side-effects on your environment.
-* Code inside scripts which are imported via `modules::use` must explicitly declare the packages they're using; calling `library()` will raise an error. Code must either use double colon syntax for each package function, e.g. `dplyr::summarise()`, or use modules' equivalent of `library()`, which looks like `modules::import('dplyr')`. In both cases it can't affect the environments of calling scripts. Using the `::` is preferred for new code. Using `modules::import()` can make adapting old code for use in modules easier.
+* Code inside scripts which are imported via `modules::use` must explicitly declare the packages they're using; calling `library()` will raise an error. Code must either use double colon syntax for each package function, e.g. `dplyr::summarise()`, or use modules' equivalent of `library()`, which looks like `modules::import('dplyr', 'summarise')`. In both cases it can't affect the environments of calling scripts.
+
+While not preferred, importing whole packages at once e.g. `modules::import('dplyr')` can make adapting old code for use in modules easier. This will generate masking warning messages, and can be slower. It also breaks the discoverability of how functions are related to their packages; just like calling `library()`, no one can figure out that `summarise` comes from `dplyr` just by reading the code.
 
 ### Akward exceptions
 
 **What if the package isn't installed?**
 
-This is why we're starting to use `packages$ensure()`. This will skip installation for a package you already have, will choose a US-based mirror for you, and will avoid compiling from source, which takes a long time.
+Projects should declare the packages they depend on in a `package.json` file, and then install them all with `modules::depend()` in top-level code. Gymnast can help with this:
+
+```
+installer <- modules::use('gymnast/R/installer.R')
+installer$install_project_dependencies()
+```
 
 **What if the location of the file to import is hard to determine, i.e. you don't know your working directory?**
 
 This is why packages exist, because they can be looked up / installed from any CRAN mirror. If a function is in a package, you always know where to get it. We may build packages in the future, but compiling and publishing them is a hassle, and it's much easier to just use `*.R` files as modules.
 
-In general this problem can be avoided by always keeping your working directory at the root of the relevant repository. Then all files that need to be imported can be placed in a subdirectory like `common` and imported with `modules::use('common/something.R')`.
+In general this problem can be avoided by always keeping your working directory at the root of the relevant repository. Then all files that need to be imported can be placed in a subdirectory like `modules` and imported with `modules::use('modules/something.R')`.
 
 ### How do these all work, exactly?
 
@@ -72,6 +79,7 @@ Pure functions have no side-effects, they only return a value, which depends ent
 The following operations make code non-pure and should be **avoided** in the bulk of code:
 
 * Setting global `options()`
+* Accessing or writing to objects outside a function
 * Writing or reading from the file system
 * Unix commands e.g. with `system()`
 * Network traffic:
