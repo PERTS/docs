@@ -19,6 +19,18 @@ read -p "Press return to continue."
 echo ""
 xcode-select --install
 
+# Brew only supports R version 4 as of 2021-03-11. We use v3.6.3. Will have
+# to install manually:
+echo "-----------------------------"
+echo "Manually download & install R"
+echo "-----------------------------"
+echo ""
+echo "Please download R 3.6.3 from the following URL and install it."
+echo "https://cran.r-project.org/bin/macosx/R-3.6.3.nn.pkg"
+echo ""
+read -p "Press return to continue."
+echo ""
+
 echo "---------------"
 echo "Installing brew"
 echo "---------------"
@@ -31,7 +43,7 @@ echo "------------------------------------"
 echo "Installing packages and apps via brew"
 echo "------------------------------------"
 echo ""
-brew install python@2
+brew install pyenv
 brew install git
 brew install node
 
@@ -41,23 +53,25 @@ brew install node
 # 2. This way brew will install up-to-date versions.
 # 3. In the future, it will be easy to check and upgrade versions.
 
-brew cask install 1password
-brew cask install box-sync
-brew cask install dropbox
-brew cask install github
-brew cask install google-backup-and-sync
-brew cask install google-chrome
-brew cask install google-cloud-sdk
+brew install --cask 1password
+brew install --cask box-sync
+brew install --cask dropbox
+brew install --cask github
+brew install --cask google-backup-and-sync
+brew install --cask google-chrome
+brew install --cask google-cloud-sdk
 # Java needed for Google Datastore Emulator (running gae apps locally).
-brew cask install java
-brew cask install postman
-brew cask install r-app
-brew cask install rstudio
-brew cask install slack
-brew cask install sublime-text
-brew cask install veracrypt
+brew install --cask java
+brew install --cask postman
+brew install --cask rstudio
+brew install --cask slack
+brew install --cask sublime-text
+brew install --cask veracrypt
 
 brew cask cleanup
+
+pyenv install 3.9.0
+pyenv install 2.7.17
 
 echo "-----------------------------------------"
 echo "Setting up Google Cloud SDK a.k.a. gcloud"
@@ -79,21 +93,18 @@ gcloud init
 gcloud components install app-engine-python
 gcloud components install app-engine-python-extras
 
-echo "--------------------------"
-echo "Cloning PERTS repositories"
-echo "--------------------------"
+echo "-------------------------------"
+echo "How to clone PERTS repositories"
+echo "-------------------------------"
+echo ""
+echo "Refer to the readme of repositories for cloning and installation:"
+echo "* https://github.com/PERTS/analysis"
+echo "* https://github.com/PERTS/rserve"
+echo "* https://github.com/PERTS/neptune"
+echo "* https://github.com/PERTS/triton"
+echo "* https://github.com/PERTS/saturn"
 echo ""
 mkdir -p ~/Sites
-# Choosing these repos because they're the ones non-devs (who benefit most from
-# automation) are most likely to contribute to.
-if [ ! -d "$HOME/Sites/yellowstone" ]
-then
-  git clone https://github.com/PERTS/yellowstone.git $HOME/Sites/yellowstone
-fi
-if [ ! -d "$HOME/Sites/mindsetkit" ]
-then
-  git clone https://github.com/PERTS/mindsetkit.git $HOME/Sites/mindsetkit
-fi
 
 echo "------------------------------------"
 echo "PERTS Workstation Installer Complete"
