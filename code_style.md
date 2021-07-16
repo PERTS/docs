@@ -241,7 +241,7 @@ In Options > Code > Editing, select:
 In Options > Code > Display, select:
 
 * Show line numbers
-* Show margin (79)
+* Show margin (80)
 
 In Options > Code > Diagnostics, select:
 
