@@ -170,6 +170,43 @@ Functions should be documented within the body of the function, and otherwise fo
 [5]: http://adv-r.had.co.nz/Style.html "Wickham's Style Guide For R"
 [6]:http://r-pkgs.had.co.nz/man.html#man-functions "ROxygen Documentation Format"
 
+### Use Explicit Imports
+
+Not everyone knows by memory which functions come from which packages. Therefore avoid this:
+
+```
+library(packageX)
+library(packageY)
+
+niftyFunction() # which package did this come from?
+```
+
+Explicitness also prevents unintended consequences of name collisions between packages, like did you get `filter()` from `dplyr` or `stats`?
+
+**1: Use package prefixes**
+
+```
+# No import or library required at the top of your file.
+
+stringr::str_count('zzz', 'z')
+```
+
+This is great because you don't need to manage any import/library calls. But you might not love typing the prefix every time.
+
+**2: Use `modules::import(package, functionA, functionB)`**
+
+```
+modules::import("reshape2", "melt")
+
+x <- melt(df, id.vars=melt_ids)
+```
+
+This saves typing if you use a function often, while still making it clear where you got it.
+
+**Exceptions**
+
+Some tidyverse functions are used _so_ often it can be very annoying to explicitly import them all. So we make exceptions for some very popular packages, like `dplyr`. Still, watch out for collisons on `filter`.
+
 ### Use Explicit Returns
 
 This is an exception to Wickham's style guide: always use a `return(foo)` statement at the end of a function, unless it's a one-liner. We find it less difficult to predict what the function will return this way.
